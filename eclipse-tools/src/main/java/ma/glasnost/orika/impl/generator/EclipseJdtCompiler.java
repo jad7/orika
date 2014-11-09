@@ -341,5 +341,4 @@ public class EclipseJdtCompiler {
 		}
 		return compiledClasses;
 	}
-
 }
