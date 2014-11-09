@@ -19,6 +19,7 @@
 package ma.glasnost.orika.impl.generator;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.hunsicker.jalopy.Jalopy;
 import ma.glasnost.orika.impl.generator.eclipsejdt.CompilationUnit;
 import ma.glasnost.orika.impl.generator.eclipsejdt.CompilerRequestor;
 import ma.glasnost.orika.impl.generator.eclipsejdt.NameEnvironment;
@@ -64,8 +66,9 @@ public class EclipseJdtCompiler {
 	private final NameEnvironment compilerNameEnvironment;
 	private final CompilerRequestor compilerRequester;
 	private final Compiler compiler;
+    private Jalopy jalopy = new Jalopy();;
 
-	public EclipseJdtCompiler() {
+    public EclipseJdtCompiler() {
 		this(Thread.currentThread().getContextClassLoader());
 	}
 
@@ -116,8 +119,37 @@ public class EclipseJdtCompiler {
 	 * Format the source code using the Eclipse text formatter
 	 */
 	public String formatSource(String code) {
+        StringBuffer response = new StringBuffer();
+        File sourceFileEclipseJdt = null;
+        FileWriter fileWriter = null;
+        try {
+            sourceFileEclipseJdt = File.createTempFile("SourceFileEclipseJdt", ".java");
+            fileWriter = new FileWriter(sourceFileEclipseJdt);
+            fileWriter.write(code);
+            fileWriter.flush();
+            fileWriter.close();
+            synchronized (this) {
+                jalopy.setInput(sourceFileEclipseJdt);
+                jalopy.setOutput(response);
+                jalopy.format(true);
+                jalopy.reset();
+            }
+            return response.toString();
 
-		return code;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                }
+            }
+            if (sourceFileEclipseJdt != null) {
+                sourceFileEclipseJdt.delete();
+            }
+        }
+        return code;
 	}
 
 	public void assertTypeAccessible(Class<?> type)  throws IllegalStateException {
