@@ -8,8 +8,7 @@ branches:
 
 notifications:
   recipients:
-    - elaatifi@gmail.com
-    - matt.deboer@gmail.com
+    - jad7kii@gmail.com
   email:
     on_success: always
     on_failure: always

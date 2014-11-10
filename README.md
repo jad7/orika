@@ -1,4 +1,4 @@
-Orika ! [![Build Status](https://secure.travis-ci.org/orika-mapper/orika.png)](http://travis-ci.org/orika-mapper/orika)
+Orika ! [![Build Status](https://secure.travis-ci.org/jad7/orika.png)](http://travis-ci.org/jad7/orika)
 -----------------------------------------------------------------------
 
 **NEW** We are pleased to announce the release of Orika **1.4.5** ! _This version is available on Maven central repository_ 
